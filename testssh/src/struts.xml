@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<constant name="struts.i18n.encoding" value="UTF-8" />
+    <!-- 把struts2的action交给spring去管理和注入属性 -->    
+        <constant name="com.opensymphony.xwork2.objectFactory" value="spring" />
+    <!-- 默认struts-default。但 当返回的数据是json时，action的package要继承json-default--> 
+        <package name="lcd.ssh.action" extends="json-default"> 
+            <global-results> <!-- 全局result -->
+            <!-- result的 type属性默认是：dispatcher,通常转向JSP页面 -->
+                <result name="error">/error/403.jsp</result> 
+            </global-results> 
+     <!-- 用户登录登出进后台 -->
+            <action name="userlogin" class="lcd.ssh.action.UserAct" method="doLogin"> 
+                <result type="json"><!-- 从根节点开始遍历，所有看到的数据就是json数据 -->
+                    <param name="root">jsonResult</param>  
+                </result> 
+            </action> 
+            <action name="logout" class="lcd.ssh.action.UserAct" method="logOut">
+                <result name="logout" type="redirect">/index.jsp</result>
+            </action>
+            <action name="goadmin" class="lcd.ssh.action.UserAct" method="goAdmin">
+                <result name="goadmin">/web/admin.jsp</result>
+            </action> 
+     <!-- 新闻的增删改查：增 -->
+            <action name="goaddnews" class="lcd.ssh.action.NewsAct" method="goAddNews">
+                <result name="goadd">/web/newsadd.jsp</result>
+            </action>
+            <action name="saveaddnews" class="lcd.ssh.action.NewsAct" method="saveAddNews">
+                <result type="json">
+                    <param name="root">jsonResult</param>
+                </result>
+            </action>
+     <!-- 新闻的增删改查：删 -->
+            <action name="delanews" class="lcd.ssh.action.NewsAct" method="deleteaNews">
+                <result type="json">
+                    <param name="root">jsonResult</param>
+                </result>
+            </action>
+     <!-- 新闻的增删改查：改 -->
+            <action name="goeditnews" class="lcd.ssh.action.NewsAct" method="goEditNews">
+                <result name="goedit">/web/newsedit.jsp</result>
+            </action>
+            <action name="saveeditnews" class="lcd.ssh.action.NewsAct" method="saveEditNews">
+                <result type="json">
+                    <param name="root">jsonResult</param>
+                </result>
+            </action>
+     <!-- 新闻的增删改查：查 -->
+            <action name="getnewscount" class="lcd.ssh.action.NewsAct" method="getnewsCount"> 
+                <result type="json">
+                    <param name="root">jsonResult</param>
+                </result>
+            </action>
+            <action name="listnews" class="lcd.ssh.action.NewsAct" method="listdgNews"> 
+                <result type="json">
+                    <param name="root">jsonResult</param>
+                </result>
+            </action>
+            <action name="getanews" class="lcd.ssh.action.NewsAct" method="getaNews">
+                <result name="goread">/web/newsread.jsp</result>
+            </action>
+        </package>
+    <!--action的404处理 -->  
+        <package name="error" extends="struts-default">  
+            <default-action-ref name="notFound" />  
+            <action name="notFound">  
+                <result>/error/404.jsp</result>  
+            </action>  
+        </package>
+    <!--上传处理 -->
+        <package name="build" extends="struts-default">  
+            <action name="uploadfile" class="uploadAct" method="upload"></action>  
+        </package>
+ 
+</struts>    
